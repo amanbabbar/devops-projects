@@ -1,16 +1,12 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Deploy React app to AWS bucket
+name: Deploy React app on AWS Elastic Beanstalk
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "deploy-react-aws-bucket" ]
-
-env:
-  NODE_VERSION: 18
-  BUCKET_NAME: "devops-static-apps-260220230637"
+    branches: [ "deploy-react-beanstalk" ]
 
 jobs:
   build:
@@ -18,21 +14,19 @@ jobs:
     steps:
       - name: Checking out code
         uses: actions/checkout@v3
-      - name: Installing Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Installing dependencies
-        run: npm install
-      - name: Building project
-        run: npm run build
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*' -x '**node_modules**'
 
-      - name: Deploy to S3 bucket
-        run: aws s3 sync ./dist/ s3://devops-static-apps-260220230637 --delete
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: vite-react-app
+          environment_name: Vitereactapp-env
+          version_label: 12345
+          region: ${{ secrets.AWS_REGION }}
+          deployment_package: deploy.zip
+
+      
 
