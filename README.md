@@ -1,2 +1,2 @@
-# devops-projects
-This repo contains various devops projects
+# Devops Projects
+This repo contains my various devops projects
