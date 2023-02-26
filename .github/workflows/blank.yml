@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SHA8: ${GITHUB_SHA::8}
+      SHA8: ${{ github.sha[0:8] }}
     steps:
       - name: Checking out code
         uses: actions/checkout@v3
