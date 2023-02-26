@@ -11,6 +11,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SHA8: ${GITHUB_SHA::8}
     steps:
       - name: Checking out code
         uses: actions/checkout@v3
@@ -24,7 +26,7 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: vite-react-app
           environment_name: Vitereactapp-env
-          version_label: "${{github.sha}}"
+          version_label: "${{ env.SHA8 }}"
           region: ${{ secrets.AWS_REGION }}
           deployment_package: deploy.zip
 
