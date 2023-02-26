@@ -21,12 +21,12 @@ jobs:
         run: |
           zip -r ${{ env.DEPLOY_PACKAGE }} . -x '*.git*' -x '**node_modules**'
           mkdir -p "${{ github.workspace }}/mywebapp"
-          cp ${{ env.DEPLOY_PACKAGE }} "${{ github.workspace }}/mywebapp/${{ env.DEPLOY_PACKAGE }}"
+          cp ${{ env.DEPLOY_PACKAGE }} "${{ github.workspace }}/mywebapp/"
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ github.sha }}
-          path: "${{ github.workspace }}/mywebapp/${{ env.DEPLOY_PACKAGE }}"
+          path: "${{ github.workspace }}/mywebapp/"
 
       
 
