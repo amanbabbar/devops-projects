@@ -18,9 +18,10 @@ jobs:
       - name: Checking out code
         uses: actions/checkout@v3
       - name: Generate deployment package
-        run: zip -r ${{ env.DEPLOY_PACKAGE }} . -x '*.git*' -x '**node_modules**'
-        run: mkdir -p "${{ github.workspace }}/mywebapp"
-        run: cp ${{ env.DEPLOY_PACKAGE }} "${{ github.workspace }}/mywebapp/${{ env.DEPLOY_PACKAGE }}"
+        run: |
+          zip -r ${{ env.DEPLOY_PACKAGE }} . -x '*.git*' -x '**node_modules**'
+          mkdir -p "${{ github.workspace }}/mywebapp"
+          cp ${{ env.DEPLOY_PACKAGE }} "${{ github.workspace }}/mywebapp/${{ env.DEPLOY_PACKAGE }}"
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
