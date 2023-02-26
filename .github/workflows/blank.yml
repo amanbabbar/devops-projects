@@ -7,29 +7,25 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "deploy-react-beanstalk" ]
+env:
+    DEPLOY_PACKAGE: "${{ github.sha }}.zip"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checking out code
         uses: actions/checkout@v3
       - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*' -x '**node_modules**'
-  deploy:
-      needs: build
-      runs-on: ubuntu-latest
-      steps:   
-        - name: Deploy to EB
-          uses: einaregilsson/beanstalk-deploy@v21
-          with:
-            aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            application_name: vite-react-app
-            environment_name: Vitereactapp-env
-            version_label: "${{ github.sha }}"
-            region: ${{ secrets.AWS_REGION }}
-            deployment_package: deploy.zip
+        run: zip -r ${{ env.DEPLOY_PACKAGE }} . -x '*.git*' -x '**node_modules**'
+        run: mkdir -p "${{ github.workspace }}/mywebapp"
+        run: cp ${{ env.DEPLOY_PACKAGE }} "${{ github.workspace }}/mywebapp/${{ env.DEPLOY_PACKAGE }}"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.sha }}
+          path: "${{ github.workspace }}/mywebapp/${{ env.DEPLOY_PACKAGE }}"
 
       
 
