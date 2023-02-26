@@ -8,8 +8,6 @@ on:
   push:
     branches: [ "deploy-react-aws-bucket" ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 env:
   NODE_VERSION: 18
   BUCKET_NAME: "devops-static-apps-260220230637"
